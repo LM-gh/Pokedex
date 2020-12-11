@@ -10,7 +10,8 @@ export const PokemonDetails = ({ match, currentPage }) => {
 
   useEffect(() => {
     const fetchPokemonData = async () => {
-      const url = await fetch(`${BASE_URL}${pokemonName}`);
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      const url = await fetch(proxyurl + BASE_URL + pokemonName);
       const response = await url.json();
       try {
         setPokemonData(response);

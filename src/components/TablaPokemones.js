@@ -55,7 +55,6 @@ export const TablaPokemones = ({ pokemones, currentPage, handleButtonID }) => {
           );
         })}
       </div>
-      ;
     </div>
   );
 };

@@ -19,7 +19,6 @@ const App = () => {
 
   const [loading, setLoading] = useState(true);
 
-  // Get pokemonesPerPage
   const lastPokemonIndex = currentPage * pokemonesPerPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonesPerPage;
 
@@ -49,14 +48,14 @@ const App = () => {
       setPokemones(pokemones);
     };
     try {
+      setLoading(true);
       fetchPokemons();
       setLoading(false);
     } catch (err) {
       console.log(err);
     }
-  }, [currentPage]);
+  }, [currentPage, pokemonesPerPage]);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleButtonID = (event) =>
@@ -76,9 +75,7 @@ const App = () => {
         <Route path={"/"}>
           <Jumbotron total={totalPokemones} />
           {loading ? (
-            <div>
-              <p className="h5">Cargando data de los Pokemones...</p>
-            </div>
+            <p className="h1">Cargando data de los Pokemones...</p>
           ) : (
             <Fragment>
               <TablaPokemones
