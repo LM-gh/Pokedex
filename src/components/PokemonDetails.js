@@ -15,8 +15,8 @@ export const PokemonDetails = ({ match, currentPage }) => {
       try {
         setPokemonData(response);
         setLoading(false);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error(err);
       }
     };
 

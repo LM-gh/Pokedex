@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Jumbotron = () => {
+export const Jumbotron = (total) => {
   return (
     <div className="jumbotron jumbotron-fluid">
       <div className="container-fluid" id="jumbotron-texto">
@@ -18,8 +18,8 @@ export const Jumbotron = () => {
           such as base stats, available abilities and typings.
         </p>
         <p className="lead">
-          Hay un total de <strong id="total-pokemones">1118</strong> Pokemones.
-          Consultalos en el siguiente catálogo.
+          Hay un total de <strong id="total-pokemones">{total.total}</strong>{" "}
+          Pokemones. Consultalos en el siguiente catálogo.
         </p>
       </div>
     </div>

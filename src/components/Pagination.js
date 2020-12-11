@@ -5,7 +5,6 @@ export const Pagination = ({
   pokemonesPerPage,
   pokemonesTotales,
   paginate,
-  currentPage,
 }) => {
   let pageNumbers = [];
 

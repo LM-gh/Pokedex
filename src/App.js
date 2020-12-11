@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { Jumbotron } from "./components/Jumbotron";
@@ -10,49 +10,51 @@ import { PokemonDetails } from "./components/PokemonDetails";
 export const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
 const App = () => {
-  const pokemonesTotales = 1118;
-
+  const [totalPokemones, setTotalPokemones] = useState(null);
   const [pokemones, setPokemones] = useState([]);
   const [pokemonesPerPage] = useState(20);
+  const [pokemon, setCurrentPokemon] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [pokemon, setCurrentPokemon] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Get pokemonesPerPage
   const lastPokemonIndex = currentPage * pokemonesPerPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonesPerPage;
-  const currentPokemones = pokemones.slice(firstPokemonIndex, lastPokemonIndex);
 
   useEffect(() => {
     const fetchPokemons = async () => {
-      const objectResponsePokemones = await fetch(
-        `${BASE_URL}?offset=0&limit=${pokemonesTotales}`
+      let pokemones = await fetch(
+        `${BASE_URL}?offset=${
+          (currentPage - 1) * pokemonesPerPage
+        }&limit=${pokemonesPerPage}`
       )
         .then((r) => r.json())
-        .then((r) => r.results)
-        .then((r) => setPokemones(r));
+        .then((r) => r.results);
+      await Promise.all(
+        pokemones.map(async (pokemon, index) => {
+          const url = await fetch(pokemon.url);
+          const response = await url.json();
+          const sprites = await response.sprites;
+          const spriteData = sprites.front_default;
+          pokemones[index].sprite = spriteData;
+        })
+      );
+
+      const total = await fetch(BASE_URL);
+      const res = await total.json();
+      const count = await res.count;
+      setTotalPokemones(count);
+      setPokemones(pokemones);
     };
-
-    fetchPokemons();
-  }, []);
-
-  useEffect(() => {
-    async function obtenerSprites(pokemones) {
-      try {
-        for (let i = 0; i < pokemones.length; i++) {
-          let url = await fetch(pokemones[i]["url"]);
-          let response = await url.json();
-          let sprites = await response.sprites;
-          let spriteData = await sprites.front_default;
-          pokemones[i].sprite = spriteData;
-        }
-      } catch (e) {
-        console.error(e.message);
-      }
+    try {
+      fetchPokemons();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
     }
-    obtenerSprites(currentPokemones);
-  }, [currentPokemones]);
+  }, [currentPage]);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -63,7 +65,6 @@ const App = () => {
   return (
     <Router>
       <NavBar />
-
       <Switch>
         <Route
           exact
@@ -72,20 +73,26 @@ const App = () => {
             <PokemonDetails {...props} currentPage={currentPage} />
           )}
         />
-
         <Route path={"/"}>
-          <Jumbotron />
-          <TablaPokemones
-            pokemones={currentPokemones}
-            currentPage={currentPage}
-            handleButtonID={handleButtonID}
-          />
-          <Pagination
-            pokemonesPerPage={pokemonesPerPage}
-            pokemonesTotales={pokemonesTotales}
-            paginate={paginate}
-            currentPage={currentPage}
-          />
+          <Jumbotron total={totalPokemones} />
+          {loading ? (
+            <div>
+              <p className="h5">Cargando data de los Pokemones...</p>
+            </div>
+          ) : (
+            <Fragment>
+              <TablaPokemones
+                pokemones={pokemones}
+                currentPage={currentPage}
+                handleButtonID={handleButtonID}
+              />
+              <Pagination
+                pokemonesPerPage={pokemonesPerPage}
+                pokemonesTotales={totalPokemones}
+                paginate={paginate}
+              />
+            </Fragment>
+          )}
         </Route>
       </Switch>
     </Router>
