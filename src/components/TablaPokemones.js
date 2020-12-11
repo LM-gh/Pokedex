@@ -33,7 +33,7 @@ export const TablaPokemones = ({ pokemones, currentPage, handleButtonID }) => {
                   </h5>
                   <Link
                     to={
-                      "/" +
+                      "/Pokedex/" +
                       currentPage +
                       "/" +
                       capitalizarPrimerLetra(pokemones[index]["name"])

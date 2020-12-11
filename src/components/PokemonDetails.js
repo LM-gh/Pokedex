@@ -6,7 +6,9 @@ export const PokemonDetails = ({ match, currentPage }) => {
 
   const [pokemonData, setPokemonData] = useState({});
 
-  let pokemonName = match.path.slice(3);
+  const toSlice = `/Pokedex/${currentPage}/`;
+
+  let pokemonName = match.path.replace(toSlice, "");
 
   useEffect(() => {
     const fetchPokemonData = async () => {
