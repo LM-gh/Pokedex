@@ -18,7 +18,7 @@ export const Pagination = ({
         <ul className="pagination">
           {pageNumbers.map((number) => (
             <li key={number} className="page-item">
-              <Link to={"/" + number}>
+              <Link to={"/Pokedex/" + number}>
                 <a
                   onClick={() => paginate(number)}
                   href={number}

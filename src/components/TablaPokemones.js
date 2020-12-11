@@ -40,7 +40,12 @@ export const TablaPokemones = ({ pokemones, currentPage, handleButtonID }) => {
                     }
                   >
                     <a
-                      href={"/" + currentPage + "/" + pokemones[index]["name"]}
+                      href={
+                        "/Pokedex/" +
+                        currentPage +
+                        "/" +
+                        pokemones[index]["name"]
+                      }
                       className="btn btn-primary"
                       key={pokemones[index]["name"]}
                       data-id={pokemones[index]["name"]}
