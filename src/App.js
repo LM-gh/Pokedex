@@ -67,12 +67,12 @@ const App = () => {
       <Switch>
         <Route
           exact
-          path={"/" + currentPage + "/" + pokemon}
+          path={"/Pokedex" + currentPage + "/" + pokemon}
           render={(props) => (
             <PokemonDetails {...props} currentPage={currentPage} />
           )}
         />
-        <Route path={"/"}>
+        <Route path={"/Pokedex"}>
           <Jumbotron total={totalPokemones} />
           {loading ? (
             <p className="h1">Cargando data de los Pokemones...</p>
